@@ -1,0 +1,8 @@
+{
+    "host"               :"https://gitlab.trendnet.org",
+    "api_path"           :"/api/v3",
+    "token"              :"HzYzGrq1fipEXUprvyQu",
+    "InsecureSkipVerify" :true,
+    "project_id"         :"41",
+    "environment"        :"dev"
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>OneClick -LMPI Deployment</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="/css/blog-home.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">OneClick - LMPI Deployment</a>
+        </div>
+
+      </div><!-- /.container -->
+    </nav>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-lg-8">
+          {{range .Tags}}
+          <!-- blog entry -->
+          <h1><a href="https://gitlab.trendnet.org/alex_wei/lmpi/commits/{{ .Name  }}" target="_blank">{{ .Name }}</a></h1>
+          <p class="lead">Hash: <a href="https://gitlab.trendnet.org/alex_wei/lmpi/commit/{{ .Commit.Id }}" target="_blank">{{ .Commit.Id }}</a></p>
+          <hr>
+          <p><span class="glyphicon glyphicon-time"></span> Committed on {{ .Commit.CommittedDateRaw }}</p>
+          <hr>
+          {{ .Commit.Message }}
+	  <hr>
+	      {{$Name := .Name}}
+	      {{range $tagName, $flag := $.FileStatus}}
+		{{if eq $tagName $Name }}
+		  {{if eq $flag ""}}
+          <a class="btn btn-primary disabled">File does not exist</a>
+		  {{else}}
+          <a class="btn btn-primary" href="/update/{{ $Name }}">Deploy <span class="glyphicon glyphicon-chevron-right"></span></a>
+		  {{end}}
+		{{end}}
+	      {{end}}   
+          <hr>
+          {{end}}
+          <!-- blog entry -->
+
+        </div>
+        
+        <div class="col-lg-4">
+          <div class="well">
+            <h1 style="text-transform:uppercase;">{{ .Environment }}</h1>
+	    <hr>
+            <h4>IP Address</h4>
+	    {{range $KEY, $VALUE := .IPAddr}}
+            <p>{{ $VALUE  }}</p>
+	    {{end }}
+            <h4>Version</h4>
+	    <p>{{ .CurrVersion }}</p>
+          </div><!-- /well -->
+        </div>
+      </div>
+      
+      <hr>
+      
+      <footer>
+        <div class="row">
+          <div class="col-lg-12">
+            <p></p>
+          </div>
+        </div>
+      </footer>
+
+    </div><!-- /.container -->
+
+    <!-- JavaScript -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/jquery.confirm.min.js"></script>
+    <script>
+    $(".btn-primary").confirm({
+        text: "It may take a while for copying file, are you sure you want to update to this version?",
+	title: "Confirmation required",
+	    confirm: function(button) {
+		var modal = '<div role="dialog" tabindex="-1" class="confirmation-modal modal fade in" style="display: block;" aria-hidden="false"></div><div class="modal-backdrop fade in"></div>';
+		$(".confirmation-modal").hide();
+	        $("body").append(modal);
+		$(".modal-backdrop").show();
+		window.location = button[0].href;
+	    },
+	    cancel: function(button) {
+		// nothing to do
+	    },
+	    confirmButton: "Yes I am",
+	    cancelButton: "No",
+	    post: false,
+	    confirmButtonClass: "btn-danger",
+	    cancelButtonClass: "btn-default"
+    });
+    </script>
+
+  </body>
+</html>
